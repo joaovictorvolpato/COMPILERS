@@ -24,13 +24,17 @@ unsigned int hash(char *key){
 void insert_into_symbol_table(Token *token, int lineno){
     unsigned int hashval = hash(token->token_str);
     list_t *l = hash_table[hashval];
-    
-    while ((l != NULL) && (strcmp(token->token_str,l->lexeme) != 0)) l = l->next;
+
+    while ((l != NULL) && (strcmp(token->token_str,l->lexeme) != 0)) {
+        l = l->next;
+        }
     
     /* variable not yet in table */
     if (l == NULL){
         l = (list_t*) malloc(sizeof(list_t));
-        strncpy(l->lexeme, token->token_str, token_len(token));  
+        memset(l->lexeme, 0, sizeof(l->lexeme));
+        strncpy(l->lexeme, token->token_str, token_len(token));
+
         /* add to hashtable */
         l->type = token->token_type;
         l->hash_val = hashval;
@@ -39,8 +43,7 @@ void insert_into_symbol_table(Token *token, int lineno){
         l->lines->line_number = lineno;
         l->lines->next = NULL;
         l->next = hash_table[hashval];
-        hash_table[hashval] = l; 
-        printf("Inserted %s for the first time with linenumber %d!\n", token->token_str, lineno); // error checking
+        hash_table[hashval] = l;
     }
     /* found in table, so just add line number */
     else{
@@ -51,7 +54,6 @@ void insert_into_symbol_table(Token *token, int lineno){
         t->next = (RefList*) malloc(sizeof(RefList));
         t->next->line_number = lineno;
         t->next->next = NULL;
-        printf("Found %s again at line %d!\n", token->token_str, lineno);
     }
 }
  
@@ -89,10 +91,7 @@ void symtab_dump(FILE * of){
         while (l != NULL){ 
             RefList *t = l->lines;
             fprintf(of,"%-12s ",l->lexeme);
-            if (l->type == INT) fprintf(of,"%-7s","int");
-            else if (l->type == IDENT) fprintf(of,"%-7s","ident");
-            else if (l->type == FLOAT) fprintf(of, "%-7s", "float");
-            else fprintf(of,"%-7s","outro");
+            if (l->type == IDENT) fprintf(of,"%-7s","ident");
             while (t != NULL){
                 fprintf(of,"%4d ",t->line_number);
             t = t->next;

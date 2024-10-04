@@ -13,7 +13,8 @@ typedef enum {
     IDENT,
     INT,
     FLOAT,
-    OUTRO
+    OUTRO,
+    RESERVED
 } Tokens;
 
 
@@ -21,7 +22,8 @@ static const char * const tokens_names[] = {
 	[IDENT] = "IDENT",
 	[INT] = "NI",
 	[FLOAT] = "NPF",
-	[OUTRO] = "OUTRO"
+	[OUTRO] = "OUTRO",
+    [RESERVED] = "RESERVED"
 };
 
 // Struct to store the token information
@@ -30,7 +32,7 @@ typedef struct {
     char* token_str;
 } Token;
 
-int token_len(Token* t);
+unsigned int token_len(Token* t);
 
 
 extern int cur_scope;

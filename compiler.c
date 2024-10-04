@@ -5,7 +5,10 @@
 #include "compiler.h"
 
 int cur_scope = 0;    
-int line_number = 1;  
+int line_number = 1;
+
+const char* reserved_keywords[] = { "return", "def", "int", "float", "if","string","bool" };
+const int num_keywords = sizeof(reserved_keywords) / sizeof(reserved_keywords[0]);
 
 int e_letra(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -21,8 +24,18 @@ int e_numero(char c) {
     return c >= '0' && c <= '9';
 }
 
-int token_len(Token* t) {
+unsigned int token_len(Token* t) {
     return strlen(t->token_str);
+}
+
+// Function to check if a token string is a reserved keyword
+int is_reserved_keyword(const char* token_str) {
+    for (int i = 0; i < num_keywords; i++) {
+        if (strcmp(token_str, reserved_keywords[i]) == 0) {
+            return 1;  // It's a reserved keyword
+        }
+    }
+    return 0;  // Not a reserved keyword
 }
 
 Token* parse_identifier(const char** current_ptr) {
@@ -36,7 +49,13 @@ Token* parse_identifier(const char** current_ptr) {
     }
 
     token->token_str[token_idx] = '\0';
-    token->token_type = IDENT;
+
+    if (is_reserved_keyword(token->token_str)) {
+        token->token_type = RESERVED;
+    } else{
+        token->token_type = IDENT;
+    }
+
     return token;
 }
 
@@ -108,6 +127,7 @@ void initialize_token_parsers() {
     token_parsers['('] = parse_other;
     token_parsers[')'] = parse_other;
     token_parsers[';'] = parse_other;
+    token_parsers['-'] = parse_other;
 }
 
 
@@ -196,7 +216,7 @@ int main() {
     while ((token = get_next_token(codigo, &current_ptr)) != NULL) {
         // Print the token information
         insert_into_symbol_table(token, line_number);
-        printf("Token Type: %s, Token String: %s\n", tokens_names[token->token_type], token->token_str);
+        //printf("Token Type: %s, Token String: %s\n", tokens_names[token->token_type], token->token_str);
         
         // Free the allocated memory for this token
         free_token(token);
