@@ -2,40 +2,27 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "compiler.h"
 
-// Enum for different token types
-typedef enum {
-    IDENT,
-    INT,
-    FLOAT,
-    OUTRO
-} Tokens;
-
-
-static const char * const tokens_names[] = {
-	[IDENT] = "IDENT",
-	[INT] = "NI",
-	[FLOAT] = "NPF",
-	[OUTRO] = "OUTRO"
-};
-
-// Struct to store the token information
-typedef struct {
-    Tokens token_type;
-    char* token_str;
-} Token;
-
+int cur_scope = 0;    
+int line_number = 1;  
 
 int e_letra(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
 int e_branco(char c) {
+    if (c == '\n') { line_number++;}
+
     return c == ' ' || c == '\n' || c == '\t';
 }
 
 int e_numero(char c) {
     return c >= '0' && c <= '9';
+}
+
+int token_len(Token* t) {
+    return strlen(t->token_str);
 }
 
 Token* parse_identifier(const char** current_ptr) {
@@ -203,15 +190,19 @@ int main() {
     Token* token;
 
     initialize_token_parsers();
+    init_hash_table();
 
     // Get each token until reaching the end of the string
     while ((token = get_next_token(codigo, &current_ptr)) != NULL) {
         // Print the token information
+        insert_into_symbol_table(token, line_number);
         printf("Token Type: %s, Token String: %s\n", tokens_names[token->token_type], token->token_str);
         
         // Free the allocated memory for this token
         free_token(token);
     }
+
+    symtab_dump(stdout);
 
     return 0;
 }
