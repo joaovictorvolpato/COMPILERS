@@ -93,11 +93,15 @@ typedef Token* (*TokenParser)(const char**);
 
 Token* parse_other(const char** current_ptr) {
     Token* token = (Token*)malloc(sizeof(Token));
-    token->token_str = (char*)malloc(256);
+    int token_idx = 0;
+    token->token_str = (char*)malloc(128);
     token->token_str[0] = **current_ptr;
-    token->token_str[1] = '\0';
+    while(**current_ptr == '=' || **current_ptr == '>' || **current_ptr == '<' || **current_ptr == '!'){
+        token->token_str[token_idx++] = **current_ptr;
+        (*current_ptr)++;
+    }
+    token->token_str[token_idx++] = '\0';
     token->token_type = OUTRO;
-    (*current_ptr)++;
     return token;
 }
 
@@ -128,6 +132,12 @@ void initialize_token_parsers() {
     token_parsers[')'] = parse_other;
     token_parsers[';'] = parse_other;
     token_parsers['-'] = parse_other;
+    token_parsers['<'] = parse_other;
+    token_parsers['>'] = parse_other;
+    token_parsers['!'] = parse_other;
+    token_parsers['*'] = parse_other;
+    token_parsers['%'] = parse_other;
+    token_parsers['/'] = parse_other;
 }
 
 
