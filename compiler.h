@@ -78,4 +78,6 @@ void hide(); // hide the current scope
 void incr_scope();
 void symtab_dump(FILE *of); // dump file
 
+
+
 #endif

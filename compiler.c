@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <glib.h>
 #include "compiler.h"
 #include "ll1parser.h"
 
@@ -98,13 +99,21 @@ typedef Token* (*TokenParser)(const char**);
 Token* parse_other(const char** current_ptr) {
     Token* token = (Token*)malloc(sizeof(Token));
     int token_idx = 0;
-    token->token_str = (char*)malloc(128);
+    token->token_str = (char*)malloc(8);
     token->token_str[0] = **current_ptr;
-    while(**current_ptr == '=' || **current_ptr == '>' || **current_ptr == '<' || **current_ptr == '!'){
-        token->token_str[token_idx++] = **current_ptr;
+
+    if(**current_ptr == '=' || **current_ptr == '>' || **current_ptr == '<' || **current_ptr == '!'){
+        (*current_ptr)++;
+        if (**current_ptr == '=' || **current_ptr == '>' || **current_ptr == '<'){
+            token_idx++;
+            token->token_str[token_idx] = **current_ptr;
+        }
+    } else{
         (*current_ptr)++;
     }
-    token->token_str[token_idx++] = '\0';
+    token_idx++;
+    token->token_str[token_idx] = '\0';
+
     token->token_type = OUTRO;
     if(strcmp(token->token_str,"{") == 0){
         incr_scope();
@@ -113,6 +122,7 @@ Token* parse_other(const char** current_ptr) {
         hide();
     }
     find_token_num(token);
+    
     return token;
 }
 
@@ -206,6 +216,8 @@ Token* get_next_token(const char* codigo, const char** current_ptr) {
 
     // If we reached the end of the string
     if (**current_ptr == '\0') {
+        printf("Returned null \n");
+        fflush(stdout);
         return NULL;
     }
 
@@ -217,7 +229,6 @@ Token* get_next_token(const char* codigo, const char** current_ptr) {
 
 
 int main() {
-
     const char inputfile[] = "input.txt";
 
     const char* codigo = read_from_file(inputfile);
@@ -228,22 +239,33 @@ int main() {
     }
 
     const char* current_ptr = codigo;
+    GList* token_list = NULL;
     Token* token;
 
     initialize_token_parsers();
+    printf("initialized token parsers");
+    initialize_parsing_table_and_linear_proble();
+    printf("parsing table");
     init_hash_table();
+
 
     // Get each token until reaching the end of the string
     while ((token = get_next_token(codigo, &current_ptr)) != NULL) {
         // Print the token information
         insert_into_symbol_table(token, line_number);
-        //printf("Token Type: %s, Token String: %s\n", tokens_names[token->token_type], token->token_str);
-        
-        // Free the allocated memory for this token
-        free_token(token);
+
+        token_list = g_list_append(token_list, token);
+
+        GList* last = g_list_last(token_list);
+
+        printf("data beeing added to the list %s \n", ((Token*)last->data)->token_str);
     }
 
+    do_ll1_parse(token_list);
+
     symtab_dump(stdout);
+
+    free_table();
 
     return 0;
 }

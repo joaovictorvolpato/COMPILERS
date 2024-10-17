@@ -1,4 +1,5 @@
 #include "compiler.h"
+#include <glib.h>
 
 #ifndef LL1_PARSER
 #define LL1_PARSER
@@ -221,7 +222,9 @@ typedef struct {
 char* pase_next_token(Token * token);
 void initialize_parsing_table_and_linear_proble();
 
+int do_ll1_parse(GList * token_list);
 unsigned int hash_lexeme(const char * lexem);
 void find_token_num(Token* token);
 void insert(const char* token_lexeme, int token_value);
+void free_table();
 

@@ -1,6 +1,7 @@
 # Variables
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g `pkg-config --cflags glib-2.0`
+LDFLAGS = `pkg-config --libs glib-2.0`
 TARGET = compiler
 
 # Source and object files
@@ -12,7 +13,7 @@ all: $(TARGET)
 
 # Link object files to create the final executable
 $(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $(OBJECTS)
+	$(CC) $(CFLAGS) -v -o $@ $(OBJECTS) $(LDFLAGS)
 
 # Compile source files into object files
 %.o: %.c

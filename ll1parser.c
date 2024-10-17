@@ -1,5 +1,6 @@
 #include "ll1parser.h"
 
+
 int parsing_table[NUM_NON_TERMINALS][NUM_TERMINALS] = {{-1}};
 HashEntry* linear_table[TABLE_SIZE];
 
@@ -403,4 +404,19 @@ void free_table() {
             free(linear_table[i]);
         }
     }
+}
+
+
+int do_ll1_parse(GList * token_list){
+
+    printf("Called do_ll1_parse \n ");
+
+    GList* token = g_list_nth(token_list,2);
+    int size =  g_list_length(token_list);
+
+    printf("token_list size %d", size);
+
+    printf("token lexem %s, token value %d", ((Token *)token->data)->token_str, ((Token *)token->data)->token_num);
+
+    return 1;
 }
