@@ -148,5 +148,3 @@ LVALUE ::= ident LVALUE_TAIL
 LVALUE_TAIL ::= [ NUMEXPRESSION ] LVALUE_TAIL
 LVALUE_TAIL ::= ''
 
-
-TODO: match lexeme with values, implement ll1, implement a stack, recognize missing terminals.

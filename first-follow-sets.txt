@@ -1,0 +1,101 @@
+Nonterminal     Nullable?                               First                                                 Follow
+--------------------------------------------------------------------------------------------------------------------------------
+S               ✘           $, break, print, read, return, if, for, def, int, float,
+                                 string, tInt, tFloat, tString, ident
+
+PROGRAM         ✔           {, break, ;, print, read, return, if, for, def, int, float,                        $
+                            string, tInt, tFloat, tString, ident}
+
+FUNCLIST        ✘                               def                                                            def, $
+
+FUNCDEF         ✘                               def                                                            def, $
+
+PARAMLIST       ✘           int, float, string, tInt, tFloat, tString                                              )
+
+PARAMLIST_TAIL  ✔                               ,                                                                  )
+
+PARAMLIST_TYPES ✘           int, float, string, tInt, float, tString                                           ident
+
+STATEMENT       ✔           {, break, ;, print, read, return, if, for, def, int, float,                    ;, else, }, {, break, print, read, return, if, for, def, int, 
+                             string, tInt, tFloat, tString, ident}                                           float, string, tInt, tFloat, tString, ident, $
+                            
+
+TUPLEDECL       ✘           tInt, tfloat, tString                                                                   ;
+
+TTYPE           ✘           tInt, tfloat, tString                                                                  ident
+
+VARDECL         ✘           int, float, string                                                                     ;
+
+TYPE            ✘           int, float, string                                                                     ident, [
+
+VARDECL_TAIL    ✔           [                                                                                       :
+
+ATRIBSTAT       ✘           ident                                                                                   ;, )
+
+ATRIBSTAT_TAIL  ✘           (, new, ident(                                                                          ;, )
+
+FUNCCALL        ✘           ident(                                                                                     )
+
+PARAMLISTCALL   ✔           ident                                                                                      )
+
+PARAMLISTCALL_TAIL ✔        ident                                                                                       )
+
+PARAMLISTCALL_CONT ✔        ,                                                                                           )
+
+PRINTSTAT       ✘           print                                                                                      ;
+
+READSTAT        ✘           read                                                                                         ;
+
+RETURNSTAT      ✘           return                                                                                       ;
+
+IDENTRET        ✘           ident                                                                                          ;
+
+IFSTAT          ✘           if                                                                                             ;
+
+F_TAIL          ✔           else                                                                                           ;
+
+FORSTAT         ✘           for                                                                                            ;
+
+STATELIST       ✔           {, break, ;, print, read, return, if, for, def, int, float,                                   }
+                            string, tInt, tFloat, tString, ident}
+
+STATELIST_TAIL  ✔           {, break, ;, print, read, return, if, for, def, int, float,                                    }
+                            string, tInt, tFloat, tString, ident}
+
+ALLOCEEXPRESSION ✘          new                                                                                            ;, )
+
+ALLOCEEXPRESSION_TAIL_CONT  ✔       [                                                                                      ;, )
+
+BOL_EXPRESSION  ✘           not, (                                                                                      )
+
+BOL_EXPRESSION_TAIL ✔       and, or, not                                                                                )
+
+BOL_OP          ✘           and, or, not                                                                                (
+
+EXPRESSION      ✘           (                                                                                ;, ), and, or, not
+
+EXPRESSION_TAIL ✔           <, >, <=, >=, ==, !=                                                                           )
+
+REL_OP          ✘           <, >, <=, >=, ==, !=                                                        +, -, int_constant, float_constant, string_constant, null, (, ident
+
+NUMEXPRESSION   ✘           +, -, int_constant, float_constant, string_constant, null, (, ident )            ],), <, >, <=, >=, ==, !=
+
+NUMEXPRESSION_TAIL ✔       +, -                                                                                ], ), <, >, <=, >=, ==, !=
+
+ADD_OP          ✘           +, -                                                                       +, -, int_constant, float_constant, string_constant, null, (, ident
+
+TERM            ✘           +, -, int_constant, float_constant, string_constant, null, (, ident                        ], ), <, >, <=, >=, ==, !=, +, -
+
+TERM_TAIL       ✔           *, /, %                                                                                    ], ), <, >, <=, >=, ==, !=, +, -
+
+MULT_OP         ✘           *, /, %                                                                                +, -, int_constant, float_constant, string_constant, null, (, ident
+
+UNARYEXPR       ✘           +, -, int_constant, float_constant, string_constant, null, (, ident                                    ], ), <, >, <=, >=, ==, !=, +, -, *, /, %
+
+UNARY_OP        ✔           +, -                                                                              int_constant, float_constant, string_constant, null, (, ident
+
+FACTOR          ✘           int_constant, float_constant, string_constant, null, (, ident                                     ], <, >, <=, >=, ==, !=, *, /, %, $, =, +, -
+
+LVALUE          ✘           ident                                                                                           =, ;, ], <, >, <=, >=, ==, !=, *, /, %, +, -
+
+LVALUE_TAIL     ✔           [                                                                                                  =, ;, ], <, >, <=, >=, ==, !=, *, /, %, +, -
