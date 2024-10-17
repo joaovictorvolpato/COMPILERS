@@ -1,10 +1,13 @@
 #include "ll1parser.h"
 
-void initialize_parsing_table() {
+int parsing_table[NUM_NON_TERMINALS][NUM_TERMINALS] = {{-1}};
+HashEntry* linear_table[TABLE_SIZE];
+
+void initialize_parsing_table_and_linear_proble() {
     //fill the table with the corresponding productions 
     parsing_table[S][CIFER] = S_PROGRAM_CIFER;
     parsing_table[S][DEF] = S_PROGRAM_CIFER;
-    parsing_table[S][IDENT] = S_PROGRAM_CIFER;
+    parsing_table[S][IDENT_] = S_PROGRAM_CIFER;
     parsing_table[S][LBRACE] = S_PROGRAM_CIFER;
     parsing_table[S][INT] = S_PROGRAM_CIFER;
     parsing_table[S][FLOAT] = S_PROGRAM_CIFER;
@@ -23,7 +26,7 @@ void initialize_parsing_table() {
 
     parsing_table[PROGRAM][CIFER] = PROGRAM_EMPTY;
     parsing_table[PROGRAM][DEF] = PROGRAM_FUNCLIST;
-    parsing_table[PROGRAM][IDENT] = PROGRAM_STATEMENT;
+    parsing_table[PROGRAM][IDENT_] = PROGRAM_STATEMENT;
     parsing_table[PROGRAM][PRINT] = PROGRAM_STATEMENT;
     parsing_table[PROGRAM][READ] = PROGRAM_STATEMENT;
     parsing_table[PROGRAM][RETURN] = PROGRAM_STATEMENT;
@@ -62,7 +65,7 @@ void initialize_parsing_table() {
     parsing_table[PARAMLIST_TYPES][TFLOAT] = PARAMLIST_TYPES_TFLOAT;
     parsing_table[PARAMLIST_TYPES][TSTRING] = PARAMLIST_TYPES_TSTRING;
 
-    parsing_table[STATEMENT][IDENT] = STATEMENT_ATRIBSTAT_SEMICOLON;
+    parsing_table[STATEMENT][IDENT_] = STATEMENT_ATRIBSTAT_SEMICOLON;
     parsing_table[STATEMENT][LBRACE] = STATEMENT_STATELIST_SEMICOLON;
     parsing_table[STATEMENT][INT] = STATEMENT_VARDECL_SEMICOLON;
     parsing_table[STATEMENT][FLOAT] = STATEMENT_VARDECL_SEMICOLON;
@@ -97,7 +100,7 @@ void initialize_parsing_table() {
     parsing_table[VARDECL_TAIL][SEMICOLON] = VARDECL_TAIL_EMPTY; 
     parsing_table[VARDECL_TAIL][LBRACKET] = VARDECL_TAIL_INT_CONSTANT_VARDECL_TAIL;
 
-    parsing_table[ATRIBSTAT][IDENT] = ATRIBSTAT_LVALUE_EQUAL_ATRIBSTAT_TAIL;
+    parsing_table[ATRIBSTAT][IDENT_] = ATRIBSTAT_LVALUE_EQUAL_ATRIBSTAT_TAIL;
 
     parsing_table[ATRIBSTAT_TAIL][IDENT_LPAREN] = ATRIBSTAT_TAIL_FUNCCALL; 
     parsing_table[ATRIBSTAT_TAIL][LPAREN] = ATRIBSTAT_TAIL_EXPRESSION; 
@@ -105,10 +108,10 @@ void initialize_parsing_table() {
 
     parsing_table[FUNCCALL][IDENT_LPAREN] = FUNCCALL_IDENT_LPAREN_PARAMLISTCALL_RPAREN; 
     
-    parsing_table[PARAMLISTCALL][IDENT] = PARAMLISTCALL_PARAMLISTCALL_TAIL; 
+    parsing_table[PARAMLISTCALL][IDENT_] = PARAMLISTCALL_PARAMLISTCALL_TAIL; 
     parsing_table[PARAMLISTCALL][RPAREN] = PARAMLISTCALL_EMPTY; 
 
-    parsing_table[PARAMLISTCALL_TAIL][IDENT] = PARAMLISTCALL_TAIL_IDENT_PARAMLISTCALL_CONT;
+    parsing_table[PARAMLISTCALL_TAIL][IDENT_] = PARAMLISTCALL_TAIL_IDENT_PARAMLISTCALL_CONT;
 
     parsing_table[PARAMLISTCALL_CONT][RPAREN] = PARAMLISTCALL_CONT_EMPTY; 
     parsing_table[PARAMLISTCALL_CONT][COMMA] = PARAMLISTCALL_CONT_COMMA_PARAMLISTCALL;
@@ -117,7 +120,7 @@ void initialize_parsing_table() {
     parsing_table[READSTAT][READ] = READSTAT_READ_LVALUE;
     parsing_table[RETURNSTAT][RETURN] = RETURNSTAT_RETURN_IDENTRET;
 
-    parsing_table[IDENTRET][IDENT] = IDENTRET_IDENT; 
+    parsing_table[IDENTRET][IDENT_] = IDENTRET_IDENT; 
     parsing_table[IDENTRET][SEMICOLON] = IDENTRET_EMPTY;
 
     parsing_table[IFSTAT][IF] = IFSTAT_IF_EXPRESSION_STATEMENT_IF_TAIL;
@@ -127,7 +130,7 @@ void initialize_parsing_table() {
 
     parsing_table[FORSTAT][FOR] = FORSTAT_FOR_ATRIBSTAT_EXPRESSION_ATRIBSTAT_STATEMENT;
 
-    parsing_table[STATELIST][IDENT] = STATELIST_STATEMENT_STATELIST_TAIL; 
+    parsing_table[STATELIST][IDENT_] = STATELIST_STATEMENT_STATELIST_TAIL; 
     parsing_table[STATELIST][IF] = STATELIST_STATEMENT_STATELIST_TAIL; 
     parsing_table[STATELIST][FOR] = STATELIST_STATEMENT_STATELIST_TAIL; 
     parsing_table[STATELIST][PRINT] = STATELIST_STATEMENT_STATELIST_TAIL; 
@@ -143,7 +146,7 @@ void initialize_parsing_table() {
     parsing_table[STATELIST][TSTRING] = STATELIST_STATEMENT_STATELIST_TAIL;
     parsing_table[STATELIST][SEMICOLON] = STATELIST_STATEMENT_STATELIST_TAIL;
 
-    parsing_table[STATELIST_TAIL][IDENT] = STATELIST_TAIL_STATELIST;
+    parsing_table[STATELIST_TAIL][IDENT_] = STATELIST_TAIL_STATELIST;
     parsing_table[STATELIST_TAIL][IF] = STATELIST_TAIL_STATELIST; 
     parsing_table[STATELIST_TAIL][FOR] = STATELIST_TAIL_STATELIST; 
     parsing_table[STATELIST_TAIL][PRINT] = STATELIST_TAIL_STATELIST; 
@@ -199,7 +202,7 @@ void initialize_parsing_table() {
     parsing_table[REL_OP][NOT_EQUAL] = REL_OP_NOT_EQUAL;
 
 
-    parsing_table[NUMEXPRESSION][IDENT] = NUMEXPRESSION_TERM_NUMEXPRESSION_TAIL; 
+    parsing_table[NUMEXPRESSION][IDENT_] = NUMEXPRESSION_TERM_NUMEXPRESSION_TAIL; 
     parsing_table[NUMEXPRESSION][INT_CONSTANT] = NUMEXPRESSION_TERM_NUMEXPRESSION_TAIL; 
     parsing_table[NUMEXPRESSION][FLOAT_CONSTANT] = NUMEXPRESSION_TERM_NUMEXPRESSION_TAIL; 
     parsing_table[NUMEXPRESSION][LPAREN] = NUMEXPRESSION_TERM_NUMEXPRESSION_TAIL; 
@@ -221,7 +224,7 @@ void initialize_parsing_table() {
     parsing_table[ADD_OP][PLUS] = ADD_OP_PLUS;
     parsing_table[ADD_OP][MINUS] = ADD_OP_MINUS;
 
-    parsing_table[TERM][IDENT] = TERM_UNARYEXPR_TERM_TAIL; 
+    parsing_table[TERM][IDENT_] = TERM_UNARYEXPR_TERM_TAIL; 
     parsing_table[TERM][INT_CONSTANT] = TERM_UNARYEXPR_TERM_TAIL; 
     parsing_table[TERM][FLOAT_CONSTANT] = TERM_UNARYEXPR_TERM_TAIL; 
     parsing_table[TERM][STRING_CONSTANT] = TERM_UNARYEXPR_TERM_TAIL;
@@ -250,7 +253,7 @@ void initialize_parsing_table() {
     parsing_table[MULT_OP][DIVIDE] = MULT_OP_DIVIDE; 
     parsing_table[MULT_OP][MODULO] = MULT_OP_MODULO; 
 
-    parsing_table[UNARYEXPR][IDENT] = UNARYEXPR_FACTOR;
+    parsing_table[UNARYEXPR][IDENT_] = UNARYEXPR_FACTOR;
     parsing_table[UNARYEXPR][LPAREN] = UNARYEXPR_FACTOR;
     parsing_table[UNARYEXPR][INT_CONSTANT] = UNARYEXPR_FACTOR;
     parsing_table[UNARYEXPR][FLOAT_CONSTANT] = UNARYEXPR_FACTOR;
@@ -262,17 +265,14 @@ void initialize_parsing_table() {
     parsing_table[UNARY_OP][PLUS] = UNARY_OP_PLUS; 
     parsing_table[UNARY_OP][MINUS] = UNARY_OP_MINUS; 
 
-
-
-    parsing_table[FACTOR][IDENT] = FACTOR_LVALUE; 
+    parsing_table[FACTOR][IDENT_] = FACTOR_LVALUE; 
     parsing_table[FACTOR][LPAREN] = FACTOR_LPAREN_NUMEXPRESSION_RPAREN; 
     parsing_table[FACTOR][INT_CONSTANT] = FACTOR_INT_CONSTANT; 
     parsing_table[FACTOR][FLOAT_CONSTANT] = FACTOR_FLOAT_CONSTANT;
     parsing_table[FACTOR][STRING_CONSTANT] = FACTOR_STRING_CONSTANT;
     parsing_table[FACTOR][NULL_LITERAL] = FACTOR_NULL_LITERAL;
 
-
-    parsing_table[LVALUE][IDENT] = LVALUE_IDENT_LVALUE_TAIL;
+    parsing_table[LVALUE][IDENT_] = LVALUE_IDENT_LVALUE_TAIL;
 
     parsing_table[LVALUE_TAIL][RPAREN] = LVALUE_TAIL_EMPTY;
     parsing_table[LVALUE_TAIL][SEMICOLON] = LVALUE_TAIL_EMPTY;
@@ -291,4 +291,116 @@ void initialize_parsing_table() {
     parsing_table[LVALUE_TAIL][RBRACKET] = LVALUE_TAIL_EMPTY;
     parsing_table[LVALUE_TAIL][EQUAL] = LVALUE_TAIL_EMPTY;
 
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        linear_table[i] = NULL;
+    }
+
+    // Insert lexemes and token values into the hash table
+    insert("null", NULL_LITERAL);
+    insert("print", PRINT);
+    insert("read", READ);
+    insert("return", RETURN);
+    insert("if", IF);
+    insert("else", ELSE);
+    insert("for", FOR);
+    insert("break", BREAK);
+    insert("def", DEF);
+    insert("new", NEW);
+    insert("tint", TINT);
+    insert("tfloat", TFLOAT);
+    insert("tstring", TSTRING);
+    insert("and", AND);
+    insert("or", OR);
+    insert("not", NOT);
+    insert("=", EQUAL);
+    insert("<", LESS_THAN);
+    insert(">", GREATER_THAN);
+    insert("<=", LESS_EQUAL);
+    insert("=>", GREATER_EQUAL);
+    insert("==", EQUAL_EQUAL);
+    insert("!=", NOT_EQUAL);
+    insert("+", PLUS);
+    insert("-", MINUS);
+    insert("*", MULTIPLY);
+    insert("/", DIVIDE);
+    insert("%", MODULO);
+    insert("(", LPAREN);
+    insert(")", RPAREN);
+    insert("[", LBRACKET);
+    insert("]", RBRACKET);
+    insert("{", LBRACE);
+    insert("}", RBRACE);
+    insert(",", COMMA);
+    insert(";", SEMICOLON);
+    insert("$", CIFER);
+
+}
+
+unsigned int hash_lexeme(const char* lexeme) {
+    unsigned long hash_value = 0;
+    while (*lexeme) {
+        hash_value = (hash_value * 31) + *lexeme; // A prime multiplier is often used
+        lexeme++;
+    }
+    return hash_value % TABLE_SIZE;
+}
+
+// Insert function using linear probing
+void insert(const char* lexeme, int token_value) {
+    unsigned int index = hash_lexeme(lexeme);
+    unsigned int original_index = index;
+
+    while (linear_table[index] != NULL) {
+        // If lexeme already exists, update the token_value
+        if (strcmp(linear_table[index]->lexeme, lexeme) == 0) {
+            linear_table[index]->token_value = token_value;
+            return;
+        }
+        index = (index + 1) % TABLE_SIZE; // Linear probing
+        if (index == original_index) {
+            printf("Error: Hash table is full\n");
+            return;
+        }
+    }
+
+    HashEntry* new_node = (HashEntry*)malloc(sizeof(HashEntry));
+    new_node->lexeme = lexeme;
+    new_node->token_value = token_value;
+    linear_table[index] = new_node;
+}
+
+void find_token_num(Token* token) {
+
+    if(token->token_type == IDENT){
+        token->token_num = IDENT_;
+    } else if (token->token_type == INT){
+        token->token_num = INT_CONSTANT;
+    } else if(token->token_type == FLOAT){
+        token->token_num =FLOAT_CONSTANT;
+    }
+
+
+    unsigned int index = hash_lexeme(token->token_str);
+    unsigned int original_index = index;
+
+    while (linear_table[index] != NULL) {
+        if (strcmp(linear_table[index]->lexeme, token->token_str) == 0) {
+            token->token_num = linear_table[index]->token_value;
+        }
+        index = (index + 1) % TABLE_SIZE; // Linear probing
+        if (index == original_index) {
+            break;
+        }
+    }
+
+    // If lexeme is not found
+    return;
+}
+
+void free_table() {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        if (linear_table[i] != NULL) {
+            free(linear_table[i]);
+        }
+    }
 }

@@ -30,6 +30,7 @@ static const char * const tokens_names[] = {
 typedef struct {
     Tokens token_type;
     char* token_str;
+    int token_num;
 } Token;
 
 unsigned int token_len(Token* t);
@@ -74,7 +75,7 @@ void insert_into_symbol_table(Token *token, int lineno); // insert entry
 list_t *lookup(char *name); // search for entry
 list_t *lookup_scope(char *name, int scope); // search for entry in scope
 void hide(); // hide the current scope
-void hide_scope(int scope); // hide a specific scope
+void incr_scope();
 void symtab_dump(FILE *of); // dump file
 
 #endif

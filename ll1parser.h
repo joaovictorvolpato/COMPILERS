@@ -55,7 +55,7 @@
 #define IDENTRET 48
 
 // Terminal symbols (starting from 0)
-#define IDENT 0
+#define IDENT_ 0
 #define INT_CONSTANT 1
 #define FLOAT_CONSTANT 2
 #define STRING_CONSTANT 3
@@ -209,8 +209,19 @@
 #define PARAMLIST_TYPES_TFLOAT 301
 #define PARAMLIST_TYPES_TSTRING 302
 
+#define TABLE_SIZE 256
+// Hash table
+
+typedef struct {
+    const char* lexeme;
+    int token_value;
+} HashEntry;
 
 #endif
-
-int parsing_table[NUM_NON_TERMINALS][NUM_TERMINALS] = {-1};
 char* pase_next_token(Token * token);
+void initialize_parsing_table_and_linear_proble();
+
+unsigned int hash_lexeme(const char * lexem);
+void find_token_num(Token* token);
+void insert(const char* token_lexeme, int token_value);
+

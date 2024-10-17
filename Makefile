@@ -4,7 +4,7 @@ CFLAGS = -Wall -g
 TARGET = compiler
 
 # Source and object files
-SOURCES = compiler.c symbol-table.c
+SOURCES = compiler.c symbol-table.c ll1parser.c
 OBJECTS = $(SOURCES:.c=.o)
 
 # Default target

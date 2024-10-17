@@ -3,11 +3,12 @@
 #include <ctype.h>
 #include <string.h>
 #include "compiler.h"
+#include "ll1parser.h"
 
 int cur_scope = 0;    
 int line_number = 1;
 
-const char* reserved_keywords[] = { "return", "def", "int", "float", "if","string","bool" };
+const char* reserved_keywords[] = { "return", "def", "int", "float", "if","string","bool","and","not","or","tint","tstring","tfloat","new","else",};
 const int num_keywords = sizeof(reserved_keywords) / sizeof(reserved_keywords[0]);
 
 int e_letra(char c) {
@@ -52,8 +53,10 @@ Token* parse_identifier(const char** current_ptr) {
 
     if (is_reserved_keyword(token->token_str)) {
         token->token_type = RESERVED;
+        find_token_num(token);
     } else{
         token->token_type = IDENT;
+        find_token_num(token);
     }
 
     return token;
@@ -86,6 +89,7 @@ Token* parse_number(const char** current_ptr) {
     }
 
     token->token_str[token_idx] = '\0';
+    find_token_num(token);
     return token;
 }
 
@@ -102,6 +106,13 @@ Token* parse_other(const char** current_ptr) {
     }
     token->token_str[token_idx++] = '\0';
     token->token_type = OUTRO;
+    if(strcmp(token->token_str,"{") == 0){
+        incr_scope();
+    }
+    if(strcmp(token->token_str,"{") == 0){
+        hide();
+    }
+    find_token_num(token);
     return token;
 }
 
