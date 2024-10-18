@@ -1,5 +1,6 @@
 #include "compiler.h"
 #include <glib.h>
+#include <stdbool.h>
 
 #ifndef LL1_PARSER
 #define LL1_PARSER

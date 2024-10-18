@@ -406,17 +406,60 @@ void free_table() {
     }
 }
 
+/*
+will return 1 if the ll1 has finished suceffuly, -1 otherwise
+*/
 
 int do_ll1_parse(GList * token_list){
 
     printf("Called do_ll1_parse \n ");
 
-    GList* token = g_list_nth(token_list,2);
     int size =  g_list_length(token_list);
-
-    printf("token_list size %d", size);
-
-    printf("token lexem %s, token value %d", ((Token *)token->data)->token_str, ((Token *)token->data)->token_num);
+    for( int i = 0; i < size; i++){
+        GList* token = g_list_nth(token_list,i);
+        
+    }
 
     return 1;
 }
+
+
+typedef struct ll1_stack
+{
+    frame * bottom;
+    frame * top;
+
+    int (*pop_stack)(struct stack*);
+    void (*push_stack)(struct stack*,int val);
+    frame* (*lookup_stack)(struct stack*);
+
+} stack;
+
+int pop_stack(stack * self){
+    frame * top = self->top;
+    self->top = top->bottom;
+    int top_val = top->value;
+    free(top);
+    return top_val;
+};
+
+void push_stack(stack * self, int val){
+    frame * new_top = malloc(sizeof(frame));
+    if (self->bottom == NULL && self->top == NULL){
+        self->bottom = new_top;
+    }
+    self->top = new_top;
+    new_top->value = val;
+    new_top->bottom = self->top;
+    new_top->up = NULL;
+}
+
+frame * lookup_stack(stack * self){
+    return self->top;
+}
+
+typedef struct stack_frame{
+    int value;
+    frame * up;
+    frame * bottom;
+} frame;

@@ -1,3 +1,9 @@
+Com base na gramática e nos conjuntos First e Follow vemos que para produções do tipo A -> X | Y a interseção do conjunto First(X) e First(Y) é vazia
+E para o caso que A -> alpha e alpha deriva para epsilon em um ou mais passos, Follow(A) e First(alpha) não tem interseção.
+Para comprovar isso montamos a tabela de transição LL1 e para cada não terminal e um terminal existe somente uma entrada na tabela.
+
+
+
 Nonterminal     Nullable?                               First                                                 Follow
 --------------------------------------------------------------------------------------------------------------------------------
 S               ✘           $, break, print, read, return, if, for, def, int, float,
