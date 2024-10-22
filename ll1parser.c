@@ -188,6 +188,8 @@ void initialize_parsing_table_and_linear_proble() {
     parsing_table[ATRIBSTAT_TAIL][IDENT_LPAREN % 100] = ATRIBSTAT_TAIL_FUNCCALL; 
     parsing_table[ATRIBSTAT_TAIL][LPAREN % 100] = ATRIBSTAT_TAIL_EXPRESSION; 
     parsing_table[ATRIBSTAT_TAIL][NEW % 100] = ATRIBSTAT_TAIL_ALLOCEXPRESSION;
+    parsing_table[ATRIBSTAT_TAIL][PLUS % 100] = ATRIBSTAT_TAIL_EXPRESSION;
+    parsing_table[ATRIBSTAT_TAIL][MINUS % 100] = ATRIBSTAT_TAIL_EXPRESSION;
 
     parsing_table[FUNCCALL][IDENT_LPAREN % 100] = VARDECL_TAIL_LBRACKET_INT_CONSTANT_RBRACKET_VARDECL_TAIL; 
     
@@ -267,6 +269,13 @@ void initialize_parsing_table_and_linear_proble() {
     parsing_table[BOOL_OP][OR % 100] = BOOL_OP_OR;
 
     parsing_table[EXPRESSION][LPAREN % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
+    parsing_table[EXPRESSION][IDENT_ % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
+    parsing_table[EXPRESSION][INT_CONSTANT % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
+    parsing_table[EXPRESSION][FLOAT_CONSTANT % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
+    parsing_table[EXPRESSION][STRING_CONSTANT % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
+    parsing_table[EXPRESSION][NULL_LITERAL % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
+    parsing_table[EXPRESSION][PLUS % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
+    parsing_table[EXPRESSION][MINUS % 100] = EXPRESSION_NUMEXPRESSION_EXPRESSION_TAIL;
 
     parsing_table[EXPRESSION_TAIL][RPAREN % 100] = EXPRESSION_TAIL_EMPTY; 
     parsing_table[EXPRESSION_TAIL][SEMICOLON % 100] = EXPRESSION_TAIL_EMPTY; 
@@ -302,7 +311,8 @@ void initialize_parsing_table_and_linear_proble() {
     parsing_table[NUMEXPRESSION_TAIL][EQUAL_EQUAL % 100] = NUMEXPRESSION_TAIL_EMPTY;
     parsing_table[NUMEXPRESSION_TAIL][NOT_EQUAL % 100] = NUMEXPRESSION_TAIL_EMPTY;
     parsing_table[NUMEXPRESSION_TAIL][PLUS % 100] = NUMEXPRESSION_TAIL_ADD_OP_TERM_NUMEXPRESSION_TAIL; 
-    parsing_table[NUMEXPRESSION_TAIL][MINUS % 100] = NUMEXPRESSION_TAIL_ADD_OP_TERM_NUMEXPRESSION_TAIL; 
+    parsing_table[NUMEXPRESSION_TAIL][MINUS % 100] = NUMEXPRESSION_TAIL_ADD_OP_TERM_NUMEXPRESSION_TAIL;
+    parsing_table[NUMEXPRESSION_TAIL][SEMICOLON % 100] = NUMEXPRESSION_TAIL_EMPTY;
 
     parsing_table[ADD_OP][PLUS % 100] = ADD_OP_PLUS;
     parsing_table[ADD_OP][MINUS % 100] = ADD_OP_MINUS;
@@ -419,6 +429,13 @@ void initialize_parsing_table_and_linear_proble() {
     insert(",", COMMA);
     insert(";", SEMICOLON);
     insert("$", CIFER);
+
+    for(int i = 0; i < NUM_NON_TERMINALS;i++){
+        for (int j = 0; j < NUMEXPRESSION; j++){
+            if(parsing_table[i][j] == 0)
+                printf(" %d \n",parsing_table[i][j]);
+        }
+    }
 
 }
 
@@ -574,10 +591,16 @@ int do_ll1_parse(GList * token_list){
                 fflush(stdout);
             int rule = parsing_table[stack_top->value % 100][first_token->token_num % 100];
 
-            printf("NON-TERMINAL %d",stack_top->value % 100);
-            printf("TERMINAL %d",first_token->token_num % 100);
+            printf("NON-TERMINAL %d \n",stack_top->value % 100);
+            printf("TERMINAL %d \n",first_token->token_num % 100);
             printf("RULE %d \n", rule);
 
+            if (rule == 0){
+                printf("RULE IS ZERO");
+                printf("RULE FROM TABLE %d \n",parsing_table[stack_top->value % 100][first_token->token_num % 100]);
+                printf("RULE FROM TABLE WITHOUT %d \n",parsing_table[stack_top->value % 100][first_token->token_num ]);
+            }
+            
             stack->pop_stack(stack);
             add_production_to_stack_in_reverse(rule,stack);
 
