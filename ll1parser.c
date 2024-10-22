@@ -29,11 +29,11 @@ int pop_stack(stack_type * self){
         printf("EMPTY STACK\n");
     }
 
-    printf("PREVIOUS TOP VALUE BEFORE POP %d \n",((frame*)(self->top)->value));
+    //printf("PREVIOUS TOP VALUE BEFORE POP %d \n",((frame*)(self->top)->value));
     frame * top = self->top;
 
-    printf("MEMORY ADDRESS OF SELF->TOP %ld \n",self->top);
-    printf("MEMORY ADDRESS OF TOP VARIABLE %ld \n",top);
+    //printf("MEMORY ADDRESS OF SELF->TOP %ld \n",self->top);
+    //printf("MEMORY ADDRESS OF TOP VARIABLE %ld \n",top);
 
     if(top->bottom == NULL){
         printf("stack size %d", self->size);
@@ -42,17 +42,17 @@ int pop_stack(stack_type * self){
 
     frame * one_under = top->bottom;
     one_under->up = NULL;
-    printf("ONE UNDER VALUE %d \n", one_under->value);
+    //printf("ONE UNDER VALUE %d \n", one_under->value);
     self->top = one_under;
-    printf("NEW TOP VALUE ASSIGN %d \n",((frame*)(self->top)->value));
+    //printf("NEW TOP VALUE ASSIGN %d \n",((frame*)(self->top)->value));
     int top_val = top->value;
 
-    printf("MEMORY ADDRESS OF SELF->TOP AFTER UPDATED %ld \n",self->top);
+    //printf("MEMORY ADDRESS OF SELF->TOP AFTER UPDATED %ld \n",self->top);
 
     free(top);
-    printf("NEW TOP VALUE AFTER FREE %d \n",((frame*)(self->top)->value));
+    //printf("NEW TOP VALUE AFTER FREE %d \n",((frame*)(self->top)->value));
     
-    printf("NEW TOP VALUE AFTER POP %d \n",((frame*)(self->top)->value));
+    //printf("NEW TOP VALUE AFTER POP %d \n",((frame*)(self->top)->value));
     self->size--;
     return top_val;
 };
@@ -68,7 +68,7 @@ void push_stack(stack_type * self, int val){
     new_top->value = val;
     new_top->up = NULL;
     self->size++;
-    printf("NEW TOP VALUE AFTER PUSH %d \n",((frame*)(self->top)->value));
+    //printf("NEW TOP VALUE AFTER PUSH %d \n",((frame*)(self->top)->value));
 }
 
 frame * lookup_stack(stack_type * self){
@@ -80,6 +80,12 @@ void initialize_parsing_table_and_linear_proble() {
 
     printf("Called initialize_parsing_table_and_linear_proble \n");
     fflush(stdout);
+
+    for(int i = 0; i < NUM_NON_TERMINALS;i++){
+        for (int j = 0; j < NUMEXPRESSION; j++){
+            parsing_table[i][j] = -1;
+        }
+    }
 
     parsing_table[S][CIFER % 100] = S_PROGRAM_CIFER;
     parsing_table[S][DEF % 100] = S_PROGRAM_CIFER;
@@ -525,7 +531,7 @@ int do_ll1_parse(GList * token_list){
     
 
 
-    while(1){
+    while (1){
 
         frame * stack_top = stack->lookup_stack(stack);
         GList * first_token_l = g_list_first(token_list);
@@ -559,6 +565,7 @@ int do_ll1_parse(GList * token_list){
 
 
         } else if (stack_top->value < 99 && parsing_table[stack_top->value % 100][first_token->token_num % 100] == -1){
+            printf("RETURNED -1 here");
             return -1;
 
         } else if(parsing_table[stack_top->value % 100][first_token->token_num % 100] != -1){
@@ -567,7 +574,9 @@ int do_ll1_parse(GList * token_list){
                 fflush(stdout);
             int rule = parsing_table[stack_top->value % 100][first_token->token_num % 100];
 
-            printf("rule %d \n", rule);
+            printf("NON-TERMINAL %d",stack_top->value % 100);
+            printf("TERMINAL %d",first_token->token_num % 100);
+            printf("RULE %d \n", rule);
 
             stack->pop_stack(stack);
             add_production_to_stack_in_reverse(rule,stack);
@@ -575,6 +584,7 @@ int do_ll1_parse(GList * token_list){
             //printf("stack_top at after push %d \n", ((frame*)stack->lookup_stack(stack))->value);
 
         } else{
+            printf("RETURNED -1 else");
             return -1;
         }
 
@@ -621,13 +631,13 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
         push_stack(stack,RPAREN);
         push_stack(stack,PARAMLIST);
         push_stack(stack,LPAREN);
-        push_stack(stack,IDENT);
+        push_stack(stack,IDENT_);
         push_stack(stack,DEF);
         break;
 
     case PARAMLIST_PARAMLIST_TYPES_IDENT_PARAMLIST_TAIL:
         push_stack(stack, PARAMLIST_TAIL);
-        push_stack(stack, IDENT);
+        push_stack(stack, IDENT_);
         push_stack(stack, PARAMLIST_TYPES);
         break;
 
@@ -699,7 +709,7 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
         push_stack(stack, RBRACKET);
         push_stack(stack, INT_CONSTANT);
         push_stack(stack, LBRACKET);
-        push_stack(stack, IDENT);
+        push_stack(stack, IDENT_);
         push_stack(stack, TTYPE);
         break;
 
@@ -717,7 +727,7 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
 
     case VARDECL_TYPE_IDENT_VARDECL_TAIL:
         push_stack(stack, VARDECL_TAIL);
-        push_stack(stack, IDENT);
+        push_stack(stack, IDENT_);
         push_stack(stack, TYPE);
         break;
 
@@ -765,7 +775,7 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
         push_stack(stack, RPAREN);
         push_stack(stack, PARAMLISTCALL);
         push_stack(stack, LPAREN);
-        push_stack(stack, IDENT);
+        push_stack(stack, IDENT_);
         break;
     
     case PARAMLISTCALL_PARAMLISTCALL_TAIL:
@@ -777,7 +787,7 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
 
     case PARAMLISTCALL_TAIL_IDENT_PARAMLISTCALL_CONT:
         push_stack(stack, PARAMLISTCALL_CONT);
-        push_stack(stack, IDENT);
+        push_stack(stack, IDENT_);
         break;
 
     case PARAMLISTCALL_CONT_COMMA_PARAMLISTCALL:
@@ -804,7 +814,7 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
         break;
 
     case IDENTRET_IDENT:
-        push_stack(stack, IDENT);
+        push_stack(stack, IDENT_);
         break;
 
     case IDENTRET_EMPTY:
@@ -1023,7 +1033,7 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
 
     case LVALUE_IDENT_LVALUE_TAIL:
         push_stack(stack, LVALUE_TAIL);
-        push_stack(stack, IDENT);
+        push_stack(stack, IDENT_);
         break;
 
     case LVALUE_TAIL_LBRACKET_NUMEXPRESSION_RBRACKET_LVALUE_TAIL:
