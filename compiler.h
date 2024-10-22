@@ -11,8 +11,8 @@
 // Enum for different token types
 typedef enum {
     IDENT,
-    INT,
-    FLOAT,
+    INT_E,
+    FLOAT_E,
     OUTRO,
     RESERVED
 } Tokens;
@@ -20,8 +20,8 @@ typedef enum {
 
 static const char * const tokens_names[] = {
 	[IDENT] = "IDENT",
-	[INT] = "NI",
-	[FLOAT] = "NPF",
+	[INT_E] = "NI",
+	[FLOAT_E] = "NPF",
 	[OUTRO] = "OUTRO",
     [RESERVED] = "RESERVED"
 };

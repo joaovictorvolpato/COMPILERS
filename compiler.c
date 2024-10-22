@@ -17,9 +17,9 @@ int e_letra(char c) {
 }
 
 int e_branco(char c) {
-    if (c == '\n') { line_number++;}
+    if (c == '\n' || c == '\r') { line_number++; return true;}
 
-    return c == ' ' || c == '\n' || c == '\t';
+    return c == ' ' || c == '\n' || c == '\t' || c == '\r';
 }
 
 int e_numero(char c) {
@@ -84,9 +84,9 @@ Token* parse_number(const char** current_ptr) {
             token->token_str[token_idx++] = **current_ptr;
             (*current_ptr)++;
         }
-        token->token_type = FLOAT;
+        token->token_type = FLOAT_E;
     } else {
-        token->token_type = INT;
+        token->token_type = INT_E;
     }
 
     token->token_str[token_idx] = '\0';
@@ -244,8 +244,10 @@ int main() {
 
     initialize_token_parsers();
     printf("initialized token parsers");
+    fflush(stdout);
     initialize_parsing_table_and_linear_proble();
     printf("parsing table");
+    fflush(stdout);
     init_hash_table();
 
 

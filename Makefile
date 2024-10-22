@@ -13,7 +13,7 @@ all: $(TARGET)
 
 # Link object files to create the final executable
 $(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -v -o $@ $(OBJECTS) $(LDFLAGS)
+	$(CC) $(CFLAGS)  -o $@ $(OBJECTS) $(LDFLAGS)
 
 # Compile source files into object files
 %.o: %.c
