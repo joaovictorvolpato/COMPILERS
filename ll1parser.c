@@ -148,7 +148,7 @@ void initialize_parsing_table_and_linear_proble() {
     parsing_table[PARAMLIST_TYPES][TSTRING % 100] = PARAMLIST_TYPES_TSTRING;
 
     parsing_table[STATEMENT][IDENT_ % 100] = STATEMENT_ATRIBSTAT_SEMICOLON;
-    parsing_table[STATEMENT][LBRACE % 100] = STATEMENT_LBRACE_STATELIST_RBRACE_SEMICOLON;
+    parsing_table[STATEMENT][LBRACE % 100] = STATEMENT_LBRACE_STATELIST_RBRACE;
     parsing_table[STATEMENT][INT % 100] = STATEMENT_VARDECL_SEMICOLON;
     parsing_table[STATEMENT][FLOAT % 100] = STATEMENT_VARDECL_SEMICOLON;
     parsing_table[STATEMENT][STRING % 100] = STATEMENT_VARDECL_SEMICOLON;
@@ -160,8 +160,8 @@ void initialize_parsing_table_and_linear_proble() {
     parsing_table[STATEMENT][PRINT % 100] = STATEMENT_PRINTSTAT_SEMICOLON;
     parsing_table[STATEMENT][READ % 100] = STATEMENT_READSTAT_SEMICOLON;
     parsing_table[STATEMENT][RETURN % 100] = STATEMENT_RETURNSTAT_SEMICOLON;
-    parsing_table[STATEMENT][IF % 100] = STATEMENT_IFSTAT_SEMICOLON;
-    parsing_table[STATEMENT][FOR % 100] = STATEMENT_FORSTAT_SEMICOLON;
+    parsing_table[STATEMENT][IF % 100] = STATEMENT_IFSTAT;
+    parsing_table[STATEMENT][FOR % 100] = STATEMENT_FORSTAT;
 
 
     parsing_table[TUPLEDECL][TINT % 100] = TUPLEDECL_TTYPE_IDENT_LBRACKET_INT_CONSTANT_RBRACKET;
@@ -208,10 +208,28 @@ void initialize_parsing_table_and_linear_proble() {
     parsing_table[IDENTRET][IDENT_ % 100] = IDENTRET_IDENT; 
     parsing_table[IDENTRET][SEMICOLON % 100] = IDENTRET_EMPTY;
 
-    parsing_table[IFSTAT][IF % 100] = IFSTAT_IF_LPAREN_EXPRESSION_RPAREN_STATEMENT_IF_TAIL;
+    parsing_table[IFSTAT][IF % 100] = IFSTAT_IF_LPAREN_EXPRESSION_RPAREN_LBRACE_STATEMENT_RBRACE_IF_TAIL;
 
     parsing_table[IF_TAIL][SEMICOLON % 100] = IF_TAIL_EMPTY; 
     parsing_table[IF_TAIL][ELSE % 100] = IF_TAIL_ELSE_STATEMENT;
+    parsing_table[IF_TAIL][CIFER % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][IDENT_ % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][LBRACE % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][RBRACE % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][INT % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][FLOAT % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][STRING % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][TINT % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][TFLOAT % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][TSTRING % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][SEMICOLON % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][BREAK % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][PRINT % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][READ % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][RETURN % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][IF % 100] = IF_TAIL_EMPTY;
+    parsing_table[IF_TAIL][FOR % 100] = IF_TAIL_EMPTY;
+    
 
     parsing_table[FORSTAT][FOR % 100] = FORSTAT_FOR_ATRIBSTAT_EXPRESSION_ATRIBSTAT_STATEMENT;
 
@@ -702,18 +720,15 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
         push_stack(stack, RETURNSTAT);
         break;
 
-    case STATEMENT_IFSTAT_SEMICOLON:
-        push_stack(stack, SEMICOLON);
+    case STATEMENT_IFSTAT:
         push_stack(stack, IFSTAT);
         break;
 
-    case STATEMENT_FORSTAT_SEMICOLON:
-        push_stack(stack, SEMICOLON);
+    case STATEMENT_FORSTAT:
         push_stack(stack, FORSTAT);
         break;
 
-    case STATEMENT_LBRACE_STATELIST_RBRACE_SEMICOLON:
-        push_stack(stack, SEMICOLON);
+    case STATEMENT_LBRACE_STATELIST_RBRACE:
         push_stack(stack, RBRACE);
         push_stack(stack, STATELIST);
         push_stack(stack, LBRACE);
@@ -843,9 +858,11 @@ void add_production_to_stack_in_reverse(int production, stack_type * stack){
     case IDENTRET_EMPTY:
         break;
 
-    case IFSTAT_IF_LPAREN_EXPRESSION_RPAREN_STATEMENT_IF_TAIL:
+    case IFSTAT_IF_LPAREN_EXPRESSION_RPAREN_LBRACE_STATEMENT_RBRACE_IF_TAIL:
         push_stack(stack, IF_TAIL);
+        push_stack(stack, RBRACE);
         push_stack(stack, STATEMENT);
+        push_stack(stack, LBRACE);
         push_stack(stack, RPAREN);
         push_stack(stack, EXPRESSION);
         push_stack(stack, LPAREN);
