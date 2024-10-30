@@ -14,7 +14,6 @@ typedef struct {
 typedef struct {
     frame * bottom;
     frame * top;
-
     int size;
 
     int (*pop_stack)(struct stack_type*);
@@ -25,34 +24,14 @@ typedef struct {
 
 int pop_stack(stack_type * self){
 
-    if(self->top == NULL){
-        printf("EMPTY STACK\n");
-    }
-
-    //printf("PREVIOUS TOP VALUE BEFORE POP %d \n",((frame*)(self->top)->value));
     frame * top = self->top;
-
-    //printf("MEMORY ADDRESS OF SELF->TOP %ld \n",self->top);
-    //printf("MEMORY ADDRESS OF TOP VARIABLE %ld \n",top);
-
-    if(top->bottom == NULL){
-        printf("stack size %d", self->size);
-        printf("LAST ELEMENT IN THE STACK \n");
-    }
 
     frame * one_under = top->bottom;
     one_under->up = NULL;
-    //printf("ONE UNDER VALUE %d \n", one_under->value);
     self->top = one_under;
-    //printf("NEW TOP VALUE ASSIGN %d \n",((frame*)(self->top)->value));
     int top_val = top->value;
 
-    //printf("MEMORY ADDRESS OF SELF->TOP AFTER UPDATED %ld \n",self->top);
-
     free(top);
-    //printf("NEW TOP VALUE AFTER FREE %d \n",((frame*)(self->top)->value));
-    
-    //printf("NEW TOP VALUE AFTER POP %d \n",((frame*)(self->top)->value));
     self->size--;
     return top_val;
 };
@@ -60,7 +39,6 @@ int pop_stack(stack_type * self){
 void push_stack(stack_type * self, int val){
     frame * new_top = malloc(sizeof(frame));
     if (self->bottom == NULL && self->top == NULL){
-        printf("BOTTOM WAS INITIALIZED \n");
         self->bottom = new_top;
     }
     new_top->bottom = self->top;
@@ -68,7 +46,6 @@ void push_stack(stack_type * self, int val){
     new_top->value = val;
     new_top->up = NULL;
     self->size++;
-    //printf("NEW TOP VALUE AFTER PUSH %d \n",((frame*)(self->top)->value));
 }
 
 frame * lookup_stack(stack_type * self){
@@ -76,11 +53,6 @@ frame * lookup_stack(stack_type * self){
 }
 
 void initialize_parsing_table_and_linear_proble() {
-    //fill the table with the corresponding productions 
-
-    printf("Called initialize_parsing_table_and_linear_proble \n");
-    fflush(stdout);
-
     for(int i = 0; i < NUM_NON_TERMINALS;i++){
         for (int j = 0; j < NUMEXPRESSION; j++){
             parsing_table[i][j] = -1;
@@ -448,13 +420,6 @@ void initialize_parsing_table_and_linear_proble() {
     insert(";", SEMICOLON);
     insert("$", CIFER);
 
-    for(int i = 0; i < NUM_NON_TERMINALS;i++){
-        for (int j = 0; j < NUMEXPRESSION; j++){
-            if(parsing_table[i][j] == 0)
-                printf(" %d \n",parsing_table[i][j]);
-        }
-    }
-
 }
 
 unsigned int hash_lexeme(const char* lexeme) {
@@ -534,10 +499,6 @@ will return 1 if the ll1 has finished suceffuly, -1 otherwise
 */
 
 int do_ll1_parse(GList * token_list){
-
-    printf("Called do_ll1_parse \n ");
-    fflush(stdout);
-
     stack_type * stack = malloc(sizeof(stack_type));
     stack->bottom = NULL;
     stack->top = NULL;
@@ -553,79 +514,33 @@ int do_ll1_parse(GList * token_list){
 
     int token_list_size = g_list_length(token_list);
 
-    for (int i = 0; i < token_list_size; i++){
-        //GList* list = g_list_nth(token_list,i);
-        printf("TOKEN : %d \n", ((Token*)g_list_nth(token_list,i)->data)->token_num);
-    }
-
     stack->push_stack(stack, CIFER);
     stack->push_stack(stack, S);
-
-    printf(" Initialized stack \n ");
-    fflush(stdout);
-    
-
 
     while (1){
 
         frame * stack_top = stack->lookup_stack(stack);
         GList * first_token_l = g_list_first(token_list);
-        Token * first_token = (Token*)(first_token_l)->data;
-
-        printf("stack top value %d \n",stack_top->value);
-        printf("First token value %d \n", first_token->token_num);    
+        Token * first_token = (Token*)(first_token_l)->data;  
 
         if (stack_top->value == CIFER && first_token->token_num == CIFER){
-                printf(" 1 \n ");
-                fflush(stdout);
             return 1;
         }
 
         if (stack_top->value == first_token->token_num){
-
-                printf(" 2 \n ");
-                fflush(stdout);
-
             stack->pop_stack(stack);
-
-        
             token_list = g_list_remove(token_list,first_token);
 
             int value = ((Token*)g_list_first(token_list))->token_num;
-
-            for (int i = 0; i < g_list_length(token_list); i++){
-                //GList* list = g_list_nth(token_list,i);
-                printf("TOKEN : %d \n", ((Token*)g_list_nth(token_list,i)->data)->token_num);
-            }
-
-
         } else if (stack_top->value < 99 && parsing_table[stack_top->value % 100][first_token->token_num % 100] == -1){
-            printf("RETURNED -1 here");
             return -1;
 
         } else if(parsing_table[stack_top->value % 100][first_token->token_num % 100] != -1){
-
-                printf(" 5 \n ");
-                fflush(stdout);
             int rule = parsing_table[stack_top->value % 100][first_token->token_num % 100];
-
-            printf("NON-TERMINAL %d \n",stack_top->value % 100);
-            printf("TERMINAL %d \n",first_token->token_num % 100);
-            printf("RULE %d \n", rule);
-
-            if (rule == 0){
-                printf("RULE IS ZERO");
-                printf("RULE FROM TABLE %d \n",parsing_table[stack_top->value % 100][first_token->token_num % 100]);
-                printf("RULE FROM TABLE WITHOUT %d \n",parsing_table[stack_top->value % 100][first_token->token_num ]);
-            }
-            
             stack->pop_stack(stack);
             add_production_to_stack_in_reverse(rule,stack);
 
-            //printf("stack_top at after push %d \n", ((frame*)stack->lookup_stack(stack))->value);
-
-        } else{
-            printf("RETURNED -1 else");
+        } else {
             return -1;
         }
 
@@ -635,7 +550,6 @@ int do_ll1_parse(GList * token_list){
 
 
 void add_production_to_stack_in_reverse(int production, stack_type * stack){
-    printf("production %d \n", production);
     switch (production)
     {
     case S_PROGRAM_CIFER:
