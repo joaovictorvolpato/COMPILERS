@@ -5,12 +5,28 @@
 #include <glib.h>
 #include "compiler.h"
 #include "ll1parser.h"
+#include "parse-numeric.h"
 
 int cur_scope = 0;    
 int line_number = 1;
 
 const char* reserved_keywords[] = { "return", "def", "int", "float", "if","string","bool","and","not","or","tint","tstring","tfloat","new","else",};
 const int num_keywords = sizeof(reserved_keywords) / sizeof(reserved_keywords[0]);
+
+
+gpointer token_copy(gconstpointer src, gpointer user_data) {
+    const Token *original = (const Token *)src;
+    Token *copy = g_new(Token, 1); // Allocate memory for the new Token
+
+    // Copy data fields
+    copy->token_type = original->token_type;
+    copy->token_num = original->token_num;
+
+    // Deep copy the string field
+    copy->token_str = g_strdup(original->token_str);
+
+    return copy;
+}
 
 int e_letra(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -263,7 +279,11 @@ int main() {
         printf("data beeing added to the list %s \n", ((Token*)last->data)->token_str);
     }
 
+    GList* token_l = g_slist_copy_deep(token_list,token_copy,NULL);
+
     do_ll1_parse(token_list);
+
+    build_AST_for_numeric_expessions(token_l);
 
     symtab_dump(stdout);
 

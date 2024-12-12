@@ -5,7 +5,7 @@ LDFLAGS = `pkg-config --libs glib-2.0`
 TARGET = compiler
 
 # Source and object files
-SOURCES = compiler.c symbol-table.c ll1parser.c
+SOURCES = compiler.c symbol-table.c ll1parser.c parse-numeric.c
 OBJECTS = $(SOURCES:.c=.o)
 
 # Default target

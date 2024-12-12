@@ -119,7 +119,7 @@ NUMEXPRESSION_TAIL ::= ADD_OP TERM NUMEXPRESSION_TAIL
 NUMEXPRESSION_TAIL ::= ''
 
 ADD_OP ::= + 
-ADD_OP ::= -
+ADD_OP ::= - 
 
 TERM ::= UNARYEXPR TERM_TAIL
 
@@ -127,8 +127,8 @@ TERM_TAIL ::= MULT_OP UNARYEXPR TERM_TAIL
 TERM_TAIL ::= ''
 
 MULT_OP ::= * 
-MULT_OP ::= /
-MULT_OP ::= %
+MULT_OP ::= / 
+MULT_OP ::= % 
 
 UNARYEXPR ::= UNARY_OP FACTOR 
 UNARYEXPR ::= FACTOR
@@ -136,15 +136,31 @@ UNARYEXPR ::= FACTOR
 UNARY_OP ::= + 
 UNARY_OP ::= -
 
-FACTOR ::= int_constant
+FACTOR ::= int_constant 
 FACTOR ::= float_constant 
 FACTOR ::= string_constant 
 FACTOR ::= null 
 FACTOR ::= LVALUE
 FACTOR ::= ( NUMEXPRESSION )
 
-LVALUE ::= ident LVALUE_TAIL
+LVALUE ::= ident LVALUE_TAIL 
 
 LVALUE_TAIL ::= [ NUMEXPRESSION ] LVALUE_TAIL
-LVALUE_TAIL ::= ''
+LVALUE_TAIL ::= '' 
 
+
+TODO: add abstract_syntax_tree
+      refactor ll1 parser
+      add error reporting
+      
+
+
+
+parseTreeContruction
+
+4 * 4 + 10;
+
+NUMEXPRESSION ::= TERM NUMEXPRESSION_TAIL
+TERM ::= UNARYEXPR TERM_TAIL
+UNARYEXPR ::= FACTOR
+FACTOR ::= int_constant {createLeaf}

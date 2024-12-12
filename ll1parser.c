@@ -1,6 +1,5 @@
 #include "ll1parser.h"
 
-
 int parsing_table[NUM_NON_TERMINALS][NUM_TERMINALS] = {{-1}};
 HashEntry* linear_table[TABLE_SIZE];
 
@@ -533,6 +532,7 @@ int do_ll1_parse(GList * token_list){
 
             int value = ((Token*)g_list_first(token_list))->token_num;
         } else if (stack_top->value < 99 && parsing_table[stack_top->value % 100][first_token->token_num % 100] == -1){
+            printf("SYNTAX ERROR expected %s but got %s",stack_top->value,first_token->token_str);
             return -1;
 
         } else if(parsing_table[stack_top->value % 100][first_token->token_num % 100] != -1){

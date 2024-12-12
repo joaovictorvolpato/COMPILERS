@@ -1,0 +1,13 @@
+typedef enum {
+    IDENT,
+    INT_E,
+    FLOAT_E,
+    OUTRO,
+    RESERVED
+} Tokens;
+
+typedef struct {
+    Tokens token_type;
+    char* token_str;
+    int token_num;
+} Token;
