@@ -22,32 +22,6 @@ typedef enum {
     OP_UNARY_MINUS
 } OperatorType;
 
-// Value types for operands
-typedef enum {
-    VAL_INT,
-    VAL_FLOAT,
-    VAL_STRING,
-    VAL_NULL,
-    VAL_IDENT
-} ValueType;
-
-
-// Token types
-typedef enum {
-    TOKEN_INT,
-    TOKEN_FLOAT,
-    TOKEN_STRING,
-    TOKEN_NULL,
-    TOKEN_IDENT,
-    TOKEN_PLUS,
-    TOKEN_MINUS,
-    TOKEN_MULTIPLY,
-    TOKEN_DIVIDE,
-    TOKEN_MODULO,
-    TOKEN_LPAREN,
-    TOKEN_RPAREN,
-    TOKEN_END
-} TokenType;
 
 // AST Node structure
 typedef struct ASTNode {
@@ -59,13 +33,14 @@ typedef struct ASTNode {
             struct ASTNode* right;
         } operator;
         struct {
-            ValueType val_type;
+            Tokens val_type;
             union {
                 int int_val;
                 float float_val;
                 char* string_val;
                 char* ident_val;
             } value;
+            char* ident_string;
         } operand;
     } data;
 } ASTNode;
@@ -74,7 +49,7 @@ typedef struct ASTNode {
 
 // Function prototypes
 ASTNode* createOperatorNode(OperatorType op, ASTNode* left, ASTNode* right);
-ASTNode* createOperandNode(ValueType type, void* value);
+ASTNode* createOperandNode(Tokens type, void* value);
 ASTNode* parseNumExpression(GList* tokens, int* current);
 ASTNode* parseNumExpressionTail(GList* tokens, int* current, ASTNode* left);
 ASTNode* parseTerm(GList* tokens, int* current);
