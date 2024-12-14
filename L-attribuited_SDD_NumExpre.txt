@@ -1,0 +1,98 @@
+NUMEXPRESSION → TERM { left = TERM.node } NUMEXPRESSION_TAIL { NUMEXPRESSION.node = NUMEXPRESSION_TAIL.node }
+NUMEXPRESSION_TAIL → ADD_OP TERM { curr_node = createNode(ADD_OP.op, left, TERM.node) }
+NUMEXPRESSION_TAIL { NUMEXPRESSION_TAIL1.node = curr_node }
+NUMEXPRESSION_TAIL → ε { NUMEXPRESSION_TAIL.node = left }
+ADD_OP → + { ADD_OP.op = '+' }
+ADD_OP → - { ADD_OP.op = '-' }
+TERM → UNARYEXPR { left = UNARYEXPR.node } TERM_TAIL { TERM.node = TERM_TAIL.node }
+TERM_TAIL → MULT_OP UNARYEXPR { curr_node = createNode(MULT_OP.op, left, UNARYEXPR.node) }
+TERM_TAIL { TERM_TAIL1.node = curr_node }
+TERM_TAIL → ε { TERM_TAIL.node = left }
+MULT_OP → * { MULT_OP.op = '*' }
+MULT_OP → / { MULT_OP.op = '/' }
+MULT_OP → % { MULT_OP.op = '%' }
+UNARYEXPR → UNARY_OP FACTOR { UNARYEXPR.node = createNode(UNARY_OP.op, FACTOR.node) }
+UNARYEXPR → FACTOR { UNARYEXPR.node = FACTOR.node }
+UNARY_OP → + { UNARY_OP.op = '+' }
+UNARY_OP → - { UNARY_OP.op = '-' }
+FACTOR → int_constant { FACTOR.node = createLeaf(int_constant.value) }
+FACTOR → float_constant { FACTOR.node = createLeaf(float_constant.value) }
+FACTOR → string_constant { FACTOR.node = createLeaf(string_constant.value) }
+FACTOR → null { FACTOR.node = createLeaf(null) }
+FACTOR → LVALUE { FACTOR.node = LVALUE.node }
+FACTOR → ( NUMEXPRESSION ) { FACTOR.node = NUMEXPRESSION.node }
+LVALUE → ident { base = ident } LVALUE_TAIL { LVALUE.node = LVALUE_TAIL.node }
+LVALUE_TAIL → [ NUMEXPRESSION ] { curr_node = createNode(index, base, NUMEXPRESSION.node) }
+LVALUE_TAIL { LVALUE_TAIL1.node = curr_node }
+LVALUE_TAIL → ε { LVALUE_TAIL.node = createNode(base) }
+
+
+--------------------------------------------------------------SDT---------------------------------------------------------------
+
+NUMEXPRESSION → TERM { left = newNode(TERM) } NUMEXPRESSION_TAIL 
+    { NUMEXPRESSION.node = NUMEXPRESSION_TAIL.node }
+
+NUMEXPRESSION_TAIL → ADD_OP TERM { 
+    curr_node = createOperatorNode(ADD_OP)
+    curr_node.left = left
+    curr_node.right = newNode(TERM)
+    left = curr_node
+} NUMEXPRESSION_TAIL 
+    { NUMEXPRESSION_TAIL1.node = left }
+
+NUMEXPRESSION_TAIL → ε 
+    { NUMEXPRESSION_TAIL.node = left }
+
+TERM → UNARYEXPR { left = newNode(UNARYEXPR) } TERM_TAIL 
+    { TERM.node = TERM_TAIL.node }
+
+TERM_TAIL → MULT_OP UNARYEXPR { 
+    curr_node = createOperatorNode(MULT_OP)
+    curr_node.left = left
+    curr_node.right = newNode(UNARYEXPR)
+    left = curr_node
+} TERM_TAIL 
+    { TERM_TAIL1.node = left }
+
+TERM_TAIL → ε 
+    { TERM_TAIL.node = left }
+
+UNARYEXPR → UNARY_OP FACTOR { 
+    UNARYEXPR.node = createOperatorNode(UNARY_OP)
+    UNARYEXPR.node.right = newNode(FACTOR)
+}
+
+UNARYEXPR → FACTOR 
+    { UNARYEXPR.node = newNode(FACTOR) }
+
+FACTOR → int_constant 
+    { FACTOR.node = createLeafNode(int_constant) }
+
+FACTOR → float_constant 
+    { FACTOR.node = createLeafNode(float_constant) }
+
+FACTOR → string_constant 
+    { FACTOR.node = createLeafNode(string_constant) }
+
+FACTOR → null 
+    { FACTOR.node = createLeafNode(null) }
+
+FACTOR → LVALUE 
+    { FACTOR.node = newNode(LVALUE) }
+
+FACTOR → ( NUMEXPRESSION ) 
+    { FACTOR.node = NUMEXPRESSION.node }
+
+LVALUE → ident { base = ident } LVALUE_TAIL 
+    { LVALUE.node = LVALUE_TAIL.node }
+
+LVALUE_TAIL → '[' NUMEXPRESSION ']' { 
+    curr_node = createIndexNode()
+    curr_node.left = base
+    curr_node.right = newNode(NUMEXPRESSION)
+    base = curr_node
+} LVALUE_TAIL 
+    { LVALUE_TAIL1.node = base }
+
+LVALUE_TAIL → ε 
+    { LVALUE_TAIL.node = createNode(base) }

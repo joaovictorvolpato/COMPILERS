@@ -6,6 +6,7 @@
 #include "compiler.h"
 #include "ll1parser.h"
 #include "parse-numeric.h"
+#include "handle-vardecl-types.h"
 
 int cur_scope = 0;    
 int line_number = 1;
@@ -243,7 +244,6 @@ Token* get_next_token(const char* codigo, const char** current_ptr) {
     return token_parsers[(int)first_char](current_ptr);
 }
 
-
 int main() {
     const char inputfile[] = "input.txt";
 
@@ -282,6 +282,8 @@ int main() {
     GList* token_l = g_slist_copy_deep(token_list,token_copy,NULL);
 
     do_ll1_parse(token_list);
+
+    add_types_to_symbol_table(token_l,(int)g_list_length(token_l));
 
     build_AST_for_numeric_expessions(token_l);
 

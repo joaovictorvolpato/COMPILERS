@@ -82,19 +82,28 @@ void incr_scope(){ /* go to next scope */
 /* print to stdout by default */ 
 void symtab_dump(FILE * of){  
   int i;
-  fprintf(of,"------------ ------ ------------\n");
-  fprintf(of,"Name         Type   Line Numbers\n");
-  fprintf(of,"------------ ------ -------------\n");
+  fprintf(of,"------------ ------ ------------ -------\n");
+  fprintf(of,"Name         Type   Line Numbers Scope  \n");
+  fprintf(of,"------------ ------ ------------ --------\n");
   for (i=0; i < SIZE; ++i){ 
     if (hash_table[i] != NULL){ 
         list_t *l = hash_table[i];
         while (l != NULL){ 
             RefList *t = l->lines;
             fprintf(of,"%-12s ",l->lexeme);
-            if (l->type == IDENT) fprintf(of,"%-7s","ident");
+            if (l->type == INT_E){
+                fprintf(of,"%-7s","INT");
+            }
+            if (l->type == FLOAT_E){
+                fprintf(of,"%-7s","FLOAT");
+            }
+            if (l->type == STRING_E){
+                fprintf(of,"%-7s","STRING");
+            }
             while (t != NULL){
                 fprintf(of,"%4d ",t->line_number);
             t = t->next;
+            fprintf(of,"%4d ",l->scope);
             }
             fprintf(of,"\n");
             l = l->next;

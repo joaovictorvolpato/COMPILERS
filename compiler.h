@@ -13,17 +13,22 @@ typedef enum {
     IDENT,
     INT_E,
     FLOAT_E,
+    STRING_E,
     OUTRO,
-    RESERVED
+    RESERVED,
+    UNDEFINED,
+    TOKENS_COUNT
 } Tokens;
 
 
 static const char * const tokens_names[] = {
 	[IDENT] = "IDENT",
-	[INT_E] = "NI",
-	[FLOAT_E] = "NPF",
+	[INT_E] = "INT",
+	[FLOAT_E] = "FLOAT",
+    [STRING_E] = "STRING",
 	[OUTRO] = "OUTRO",
-    [RESERVED] = "RESERVED"
+    [RESERVED] = "RESERVED",
+    [UNDEFINED] = "UNDEFINED"
 };
 
 // Struct to store the token information
@@ -51,6 +56,7 @@ typedef struct RefList{
     int line_number;
     struct RefList *next;
     Tokens type;
+    int scope;
 }RefList;
  
 // struct that represents a list node

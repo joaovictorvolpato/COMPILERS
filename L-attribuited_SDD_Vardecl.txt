@@ -1,0 +1,19 @@
+VARDECL → TYPE ident VARDECL_TAIL
+    {
+        entry = lookupSymbolTable(ident.name);
+        entry.type = Type.current_type;
+    }
+
+TYPE → int     { current_type = TYPE_INT; }
+TYPE → float   { current_type = TYPE_FLOAT; }
+TYPE → string  { current_type = TYPE_STRING; }
+
+VARDECL_TAIL → [ int_constant ] VARDECL_TAIL
+    {
+
+    }
+
+VARDECL_TAIL → ε
+    {
+
+    }
