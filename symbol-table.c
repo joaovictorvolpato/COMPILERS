@@ -72,10 +72,12 @@ list_t *lookup_scope(char *name, int scope){ /* return symbol if found or NULL i
 }
  
 void hide(){ /* hide the current scope */
+    printf("SCOPE DECREMENTED\n");
     if(cur_scope > 0) cur_scope--;
 }
  
 void incr_scope(){ /* go to next scope */
+    printf("SCOPE INCREMENTED\n");
     cur_scope++;
 }
  
@@ -98,13 +100,9 @@ void symtab_dump(FILE * of){
                 fprintf(of,"%-7s","FLOAT");
             }
             if (l->type == STRING_E){
-                fprintf(of,"%-7s","STRING");
+                fprintf(of,"%-7s","FLOAT");
             }
-            while (t != NULL){
-                fprintf(of,"%4d ",t->line_number);
-            t = t->next;
-            fprintf(of,"%4d ",l->scope);
-            }
+            fprintf(of,"%-8d ",l->scope);
             fprintf(of,"\n");
             l = l->next;
         }

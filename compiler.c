@@ -133,9 +133,11 @@ Token* parse_other(const char** current_ptr) {
 
     token->token_type = OUTRO;
     if(strcmp(token->token_str,"{") == 0){
+        printf("FOUND OPEN BRACKETS \n");
         incr_scope();
     }
-    if(strcmp(token->token_str,"{") == 0){
+    if(strcmp(token->token_str,"}") == 0){
+        printf("FOUND CLOSE BRACKETS \n");
         hide();
     }
     find_token_num(token);
