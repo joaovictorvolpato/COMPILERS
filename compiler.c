@@ -8,6 +8,7 @@
 #include "parse-numeric.h"
 #include "handle-vardecl-types.h"
 #include "type-checker.h"
+#include "loop-handler.h"
 
 int cur_scope = 0;    
 int line_number = 1;
@@ -291,6 +292,8 @@ int main() {
     check_identifier_type_consistency(token_l);
 
     build_AST_for_numeric_expessions(token_l);
+
+    loop_checker(token_l);
 
     symtab_dump(stdout);
 
