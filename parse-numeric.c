@@ -37,7 +37,7 @@ ASTNode* createOperandNode(Tokens type, void* value) {
         case IDENT:
             list_t* entry = lookup((char*)value);
             node->data.operand.val_type = entry->type;
-            printf("VALUE BEEING INSERTED INTO AST, %s \n", (char*)value);
+            //printf("VALUE BEEING INSERTED INTO AST, %s \n", (char*)value);
             node->data.operand.ident_string = strdup((char*)value);
             switch (node->data.operand.val_type)
             {
@@ -264,7 +264,7 @@ bool check_if_token_is_beggining_of_numex(GList* tokens, int index, int token_va
         GList * first_token_l = g_list_nth(tokens,index);
         Token * token = (Token*)(first_token_l)->data;
         int value = token->token_num;
-        printf("MATCHED IDENT: NEXT VAL IS ->, %s\n", token->token_str);
+        //printf("MATCHED IDENT: NEXT VAL IS ->, %s\n", token->token_str);
         if (value == EQUAL || value == LPAREN || value == LESS_THAN || 
             value == GREATER_EQUAL || value == GREATER_THAN || value == LESS_EQUAL ||
             value == NOT_EQUAL || value == EQUAL_EQUAL || value == SEMICOLON || value == RPAREN){
@@ -383,7 +383,7 @@ int build_AST_for_numeric_expessions(GList * tokens_list) {
         int value = token->token_num;
         bool is_token_in_numex_first = check_if_token_is_beggining_of_numex(tokens_list,index,value);
         if (is_token_in_numex_first == true){
-            printf("BUILDING AST FOR EXPRESSION STARTING WITH, %s \n", token->token_str);
+            //printf("BUILDING AST FOR EXPRESSION STARTING WITH, %s \n", token->token_str);
             ASTNode* ast = parseNumExpression(tokens_list, &index);
             ast_array[ast_count++] = ast; 
         }

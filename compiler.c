@@ -7,6 +7,7 @@
 #include "ll1parser.h"
 #include "parse-numeric.h"
 #include "handle-vardecl-types.h"
+#include "type-checker.h"
 
 int cur_scope = 0;    
 int line_number = 1;
@@ -133,11 +134,11 @@ Token* parse_other(const char** current_ptr) {
 
     token->token_type = OUTRO;
     if(strcmp(token->token_str,"{") == 0){
-        printf("FOUND OPEN BRACKETS \n");
+        //printf("FOUND OPEN BRACKETS \n");
         incr_scope();
     }
     if(strcmp(token->token_str,"}") == 0){
-        printf("FOUND CLOSE BRACKETS \n");
+        //printf("FOUND CLOSE BRACKETS \n");
         hide();
     }
     find_token_num(token);
@@ -286,6 +287,8 @@ int main() {
     do_ll1_parse(token_list);
 
     add_types_to_symbol_table(token_l,(int)g_list_length(token_l));
+
+    check_identifier_type_consistency(token_l);
 
     build_AST_for_numeric_expessions(token_l);
 

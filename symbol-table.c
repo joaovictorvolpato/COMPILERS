@@ -22,6 +22,9 @@ unsigned int hash(char *key){
 }
  
 void insert_into_symbol_table(Token *token, int lineno){
+
+    //printf("INSERTING INTO TABLE, %s \n",token->token_str);
+
     unsigned int hashval = hash(token->token_str);
     list_t *l = hash_table[hashval];
 
@@ -47,12 +50,15 @@ void insert_into_symbol_table(Token *token, int lineno){
     }
     /* found in table, so just add line number */
     else{
+        //printf("FOUND IN TABLE ADDING TO REFSLIST, %s \n",token->token_str);
         l->scope = cur_scope;
         RefList *t = l->lines;
         while (t->next != NULL) t = t->next;
         /* add linenumber to reference list */
         t->next = (RefList*) malloc(sizeof(RefList));
+        t->next->type = token->token_type;
         t->next->line_number = lineno;
+        t->next->scope = cur_scope;
         t->next->next = NULL;
     }
 }
@@ -63,6 +69,8 @@ list_t *lookup(char *name){ /* return symbol if found or NULL if not found */
     while ((l != NULL) && (strcmp(name,l->lexeme) != 0)) l = l->next;
     return l; // NULL is not found
 }
+
+
  
 list_t *lookup_scope(char *name, int scope){ /* return symbol if found or NULL if not found */
     unsigned int hashval = hash(name);
@@ -72,12 +80,12 @@ list_t *lookup_scope(char *name, int scope){ /* return symbol if found or NULL i
 }
  
 void hide(){ /* hide the current scope */
-    printf("SCOPE DECREMENTED\n");
+    //("SCOPE DECREMENTED\n");
     if(cur_scope > 0) cur_scope--;
 }
  
 void incr_scope(){ /* go to next scope */
-    printf("SCOPE INCREMENTED\n");
+    //printf("SCOPE INCREMENTED\n");
     cur_scope++;
 }
  
@@ -100,7 +108,7 @@ void symtab_dump(FILE * of){
                 fprintf(of,"%-7s","FLOAT");
             }
             if (l->type == STRING_E){
-                fprintf(of,"%-7s","FLOAT");
+                fprintf(of,"%-7s","STRING");
             }
             fprintf(of,"%-8d ",l->scope);
             fprintf(of,"\n");
