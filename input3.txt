@@ -1,0 +1,77 @@
+int p;
+int q;
+for (p = 0; p < 15; p = p + 2) {
+    q = q * q;
+    float r;
+    r = 12.5 * 6.2 + 22.3;
+    if (r > 60) {
+        q = 30;
+    }
+    if (p > 12) {
+        q = 6;
+    }
+    if (q > 12) {
+        p = 6;
+    }
+    string alpha;
+    alpha = sigma;
+
+    int m1;
+    p1 = p1 * 3;
+    q1 = q1 * 5;
+    float r1;
+    r1 = 14.6 * 5.3 + 28.4;
+    if (r1 > 65) {
+        q1 = 34;
+    }
+    if (p1 > 14) {
+        q1 = 7;
+    }
+    if (q1 > 14) {
+        p1 = 7;
+    }
+    string beta1;
+    beta1 = lambda;
+
+    int b2;
+    v2 = v2 * 4;
+    w2 = w2 * 6;
+    float t2;
+    t2 = 16.7 * 8.1 + 32.5;
+    if (t2 > 70) {
+        w2 = 36;
+    }
+    if (v2 > 16) {
+        w2 = 8;
+    }
+    if (w2 > 16) {
+        v2 = 8;
+    }
+
+    int n3;
+    p3 = p3 * 5;
+    q3 = q3 * 7;
+    float r3;
+    r3 = 17.8 * 7.5 + 30.6;
+    if (r3 > 75) {
+        q3 = 38;
+    }
+    if (p3 > 18) {
+        q3 = 9;
+    }
+    if (q3 > 18) {
+        p3 = 9;
+    }
+    string gamma3;
+    gamma3 = rho;
+
+    int n4;
+    p4 = p4 * 6;
+    q4 = q4 * 8;
+    float r4;
+    r4 = 18.9 * 8.2 + 34.7;
+    if (r4 > 80) {
+        q4 = 40
+    }
+    string z;
+}

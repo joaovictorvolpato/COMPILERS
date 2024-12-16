@@ -1,0 +1,144 @@
+Funções auxiliares:
+- newTemp(): gera um novo registrador temporário
+- newLabel(): gera um novo rótulo
+- concat(code1, code2): concatena códigos intermediários
+
+PROGRAM -> STATEMENT
+code = STATEMENT.code
+
+PROGRAM -> FUNCLIST
+code = FUNCLIST.code
+
+PROGRAM -> ε
+code = ""
+
+FUNCDEF -> def ident ( PARAMLIST ) { STATELIST }
+code = concat(
+    "label " + ident.lexval + ":",
+    PARAMLIST.code,
+    STATELIST.code,
+    "end_function"
+)
+
+FUNCLIST -> FUNCDEF FUNCLIST'
+code = concat(FUNCDEF.code, FUNCLIST'.code)
+
+FUNCLIST' -> FUNCDEF FUNCLIST'
+code = concat(FUNCDEF.code, FUNCLIST'.code)
+
+FUNCLIST' -> ε
+code = ""
+
+VARDECL -> TYPE ident VARDECL_TAIL
+code = concat(
+    "declare " + TYPE.type + " " + ident.lexval,
+    VARDECL_TAIL.code
+)
+
+TUPLEDECL -> TTYPE ident [ int_constant ]
+code = concat(
+    "declare array " + TTYPE.type + " " + ident.lexval + 
+    "[" + int_constant.lexval + "]"
+)
+
+ATRIBSTAT -> LVALUE = ATRIBSTAT_TAIL
+code = concat(
+    ATRIBSTAT_TAIL.code,
+    LVALUE.place + " = " + ATRIBSTAT_TAIL.place
+)
+
+EXPRESSION -> NUMEXPRESSION EXPRESSION_TAIL
+place = NUMEXPRESSION.place
+code = concat(
+    NUMEXPRESSION.code, 
+    EXPRESSION_TAIL.code
+)
+
+NUMEXPRESSION -> TERM NUMEXPRESSION_TAIL
+place = TERM.place
+code = concat(
+    TERM.code,
+    NUMEXPRESSION_TAIL.code
+)
+
+NUMEXPRESSION_TAIL -> ADD_OP TERM NUMEXPRESSION_TAIL
+t = newTemp()
+place = t
+code = concat(
+    TERM.code,
+    NUMEXPRESSION_TAIL.code,
+    t + " = " + TERM.place + " " + ADD_OP.op
+)
+
+TERM -> UNARYEXPR TERM_TAIL
+place = UNARYEXPR.place
+code = concat(
+    UNARYEXPR.code,
+    TERM_TAIL.code
+)
+
+TERM_TAIL -> MULT_OP UNARYEXPR TERM_TAIL
+t = newTemp()
+place = t
+code = concat(
+    UNARYEXPR.code,
+    TERM_TAIL.code,
+    t + " = " + UNARYEXPR.place + " " + MULT_OP.op
+)
+
+FACTOR -> int_constant
+place = int_constant.lexval
+code = ""
+
+FACTOR -> LVALUE
+place = LVALUE.place
+code = LVALUE.code
+
+IFSTAT -> if ( EXPRESSION ) { STATEMENT } IF_TAIL
+lfalse = newLabel()
+lend = newLabel()
+code = concat(
+    EXPRESSION.code,
+    "if " + EXPRESSION.place + " == 0 goto " + lfalse,
+    STATEMENT.code,
+    IF_TAIL.code,
+    "goto " + lend,
+    lfalse + ":",
+    IF_TAIL.code,
+    lend + ":"
+)
+
+FORSTAT -> for ( ATRIBSTAT ; EXPRESSION ; ATRIBSTAT ) STATEMENT
+lstart = newLabel()
+lend = newLabel()
+code = concat(
+    ATRIBSTAT1.code,
+    lstart + ":",
+    EXPRESSION.code,
+    "if " + EXPRESSION.place + " == 0 goto " + lend,
+    STATEMENT.code,
+    ATRIBSTAT2.code,
+    "goto " + lstart,
+    lend + ":"
+)
+
+FUNCCALL -> ident ( PARAMLISTCALL )
+t = newTemp()
+code = concat(
+    PARAMLISTCALL.code,
+    t + " = call " + ident.lexval
+)
+
+PRINTSTAT -> print EXPRESSION
+code = concat(
+    EXPRESSION.code,
+    "print " + EXPRESSION.place
+)
+
+READSTAT -> read LVALUE
+code = concat(
+    "read " + LVALUE.place
+)
+
+RETURNSTAT -> return IDENTRET
+code = "return " + (IDENTRET.place || "")

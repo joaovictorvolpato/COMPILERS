@@ -1,0 +1,152 @@
+int x;
+int y;
+for(x = 0; x < 10; x = x + 1){
+    y = y * y;
+    float z;
+  z = 10.4 * 5.4 + 20.1;
+  if (z > 50){
+    y = 24;
+  }
+  if (x > 10){
+    y = 5;
+  }
+  if (y > 10){
+    x = 5;
+  }
+  string zeta;
+  zeta = ola;
+
+  int a1;
+  x1 = x1 * 2;
+  y1 = y1 * 4;
+  float z1;
+  z1 = 10.4 * 5.4 + 20.1;
+  if (z1 > 50){
+    y1 = 24;
+  }
+  if (x1 > 10){
+    y1 = 5;
+  }
+  if (y1 > 10){
+    x1 = 5;
+  }
+  string zeta2;
+  zeta = mito;
+  int b;
+  u = u * 3;
+  v = v * 5;
+  float w;
+  w = 15.2 * 6.3 + 25.7;
+  if (w > 60) {
+      v = 30;
+  }
+  if (u > 15) {
+      v = 8;
+  }
+  if (v > 15) {
+      u = 8;
+  }
+
+  int a5;
+  x5 = x5 * 6;
+  y5 = y5 * 8;
+  float z5;
+  z5 = 11.3 * 4.9 + 25.4;
+  if (z5 > 70) {
+      y5 = 40;
+  }
+  if (x5 > 18) {
+      y5 = 9;
+  }
+  if (y5 > 18) {
+      x5 = 9;
+  }
+  string omega5;
+  omega5 = epsilon;
+
+  int a6;
+  x6 = x6 * 7;
+  y6 = y6 * 9;
+  float z6;
+  z6 = 13.5 * 5.8 + 29.7;
+  if (z6 > 75) {
+      y6 = 44;
+  }
+  if (x6 > 20) {
+      y6 = 10;
+  }
+  if (y6 > 20) {
+      x6 = 10;
+  }
+  string omega6;
+  omega6 = zeta;
+
+  int a7;
+  x7 = x7 * 8;
+  y7 = y7 * 10;
+  float z7;
+  z7 = 14.8 * 6.3 + 32.5;
+  if (z7 > 80) {
+      y7 = 48;
+  }
+  if (x7 > 22) {
+      y7 = 11;
+  }
+  if (y7 > 22) {
+      x7 = 11;
+  }
+  string omega7;
+  omega7 = eta;
+
+  int a8;
+  x8 = x8 * 9;
+  y8 = y8 * 11;
+  float z8;
+  z8 = 16.1 * 7.2 + 34.8;
+  if (z8 > 85) {
+      y8 = 52;
+  }
+  if (x8 > 24) {
+      y8 = 12;
+  }
+  if (y8 > 24) {
+      x8 = 12;
+  }
+  string omega8;
+  omega8 = theta;
+
+  int a9;
+  x9 = x9 * 10;
+  y9 = y9 * 12;
+  float z9;
+  z9 = 18.4 * 8.3 + 38.7;
+  if (z9 > 90) {
+      y9 = 56;
+  }
+  if (x9 > 26) {
+      y9 = 13;
+  }
+  if (y9 > 26) {
+      x9 = 13;
+  }
+  string omega9;
+  omega9 = iota;
+
+  int a10;
+  x10 = x10 * 11;
+  y10 = y10 * 13;
+  float z10;
+  z10 = 20.7 * 9.1 + 40.5;
+  if (z10 > 95) {
+      y10 = 60;
+  }
+  if (x10 > 28) {
+      y10 = 14;
+  }
+  if (y10 > 28) {
+      x10 = 14;
+  }
+  string omega10;
+  omega10 = kappa;
+}
+

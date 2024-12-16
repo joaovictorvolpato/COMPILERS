@@ -9,6 +9,7 @@
 #include "handle-vardecl-types.h"
 #include "type-checker.h"
 #include "loop-handler.h"
+#include "intermidiate-code-generator.h"
 
 int cur_scope = 0;    
 int line_number = 1;
@@ -249,7 +250,7 @@ Token* get_next_token(const char* codigo, const char** current_ptr) {
 }
 
 int main() {
-    const char inputfile[] = "input.txt";
+    const char inputfile[] = "input3.txt";
 
     const char* codigo = read_from_file(inputfile);
 
@@ -294,6 +295,8 @@ int main() {
     build_AST_for_numeric_expessions(token_l);
 
     loop_checker(token_l);
+
+    generetaIntCode(token_l);
 
     symtab_dump(stdout);
 
