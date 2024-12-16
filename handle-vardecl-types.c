@@ -35,7 +35,7 @@ void add_types_to_symbol_table(GList* tokens, int token_count) {
     int peek;
     int scope = 0;
 
-    printf("CALLED ADD TYPES TO SYMBOL TABLE \n");
+    //printf("CALLED ADD TYPES TO SYMBOL TABLE \n");
     
     for (int i = 0; i < token_count; i++) {
         GList * first_token_l = g_list_nth(tokens,i);
@@ -61,7 +61,7 @@ void add_types_to_symbol_table(GList* tokens, int token_count) {
                 if(value == IDENT_){
                     //printf("TOKEN IDENT \n");
                     //printf("token string on IDENT, %s \n", token->token_str);
-                    printf("CALLING FOR SCOPE %d \n",scope);
+                    //printf("CALLING FOR SCOPE %d \n",scope);
                     update_symbol_type(token_int->token_str, current_type,scope);
                 }
                 break;
@@ -89,7 +89,7 @@ void add_types_to_symbol_table(GList* tokens, int token_count) {
                 break;
 
             case LBRACE:
-                printf("INCREMENTED SCOPE\n");
+                //printf("INCREMENTED SCOPE\n");
                 scope++;
                 break;
             case RBRACE:

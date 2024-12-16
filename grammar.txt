@@ -156,11 +156,17 @@ TODO: add abstract_syntax_tree
 
 
 
-parseTreeContruction
-
-4 * 4 + 10;
-
-NUMEXPRESSION ::= TERM NUMEXPRESSION_TAIL
-TERM ::= UNARYEXPR TERM_TAIL
-UNARYEXPR ::= FACTOR
-FACTOR ::= int_constant {createLeaf}
+def f (int x) {
+    if (x < 0){
+     x = -x;
+     int a;
+     string a;
+     x = 4 * 3 + a;
+    }
+    for(y=0;y<10;y=y+1){
+      x = x + 1;
+      break;
+    }
+  return;
+  break; 
+}

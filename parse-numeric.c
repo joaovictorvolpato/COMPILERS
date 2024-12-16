@@ -147,7 +147,7 @@ ASTNode* parseFactor(GList* tokens, int* current) {
         case INT_CONSTANT: {
             char* val = token->token_str;
             int value = (int) atoll(val);
-            printf("Value of value %d", value);
+            //printf("Value of value %d", value);
             fflush(stdout);
             node = createOperandNode(INT_E, &value);
             break;
@@ -197,34 +197,34 @@ void printAST(ASTNode* node, int depth) {
     
     if (node->type == NODE_OPERATOR) {
         const char* opNames[] = {"+", "-", "*", "/", "%", "U+", "U-"};
-        printf("Operator: %s\n", opNames[node->data.operator.op]);
+        //printf("Operator: %s\n", opNames[node->data.operator.op]);
         printAST(node->data.operator.left, depth + 1);
         printAST(node->data.operator.right, depth + 1);
     } else {
         switch(node->data.operand.val_type) {
             case INT_E:
                 if(node->data.operand.value.int_val == INGONE){
-                    printf("Integer: %s\n", node->data.operand.ident_string);
+                    //printf("Integer: %s\n", node->data.operand.ident_string);
                 } else{
-                    printf("Integer: %d\n", node->data.operand.value.int_val);
+                    //printf("Integer: %d\n", node->data.operand.value.int_val);
                 }
                 break;
             case FLOAT_E:
                 if(node->data.operand.value.float_val == FLT_MIN){
-                    printf("Float: %s\n", node->data.operand.ident_string);
+                    //printf("Float: %s\n", node->data.operand.ident_string);
                 } else{
-                    printf("Float: %f\n", node->data.operand.value.float_val);
+                    //printf("Float: %f\n", node->data.operand.value.float_val);
                 }
                 break;
             case STRING_E:
                 if(node->data.operand.value.string_val == NULL){
-                    printf("String: %s\n", node->data.operand.ident_string);
+                    //printf("String: %s\n", node->data.operand.ident_string);
                 } else{
-                    printf("String: %s\n", node->data.operand.value.string_val);
+                    //printf("String: %s\n", node->data.operand.value.string_val);
                 }
                 break;
             case IDENT:
-                printf("Identifier: %s\n", node->data.operand.value.ident_val);
+                //printf("Identifier: %s\n", node->data.operand.value.ident_val);
                 break;
             case UNDEFINED:
                 printf("Null\n");
@@ -390,7 +390,7 @@ int build_AST_for_numeric_expessions(GList * tokens_list) {
         index++;
     }
     
-    printf("Abstract Syntax Tree ast_count: %d\n",ast_count);
+    //printf("Abstract Syntax Tree ast_count: %d\n",ast_count);
     assertASTArrayValueType(ast_array,ast_count);
     
     printf("Abstract Syntax Tree:\n");
